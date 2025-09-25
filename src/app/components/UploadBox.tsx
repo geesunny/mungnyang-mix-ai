@@ -20,14 +20,21 @@ export default function UploadBox() {
     const handleClick = () => inputRef.current?.click();
 
     return (
-        <div>
-            <button type="button" onClick={handleClick}>
+        <div className="flex w-full max-w-md flex-col items-center gap-4 rounded-xl border-2 border-dashed border-gray-300 bg-white p-6 shadow">
+            <button
+                type="button"
+                onClick={handleClick}
+                className="w-full rounded-lg bg-gray-100 py-3 text-sm font-medium text-gray-700 hover:bg-gray-200">
                 사진 선택하기
             </button>
 
-            <input ref={inputRef} type="file" accept="image/*" onChange={handleChange} />
+            <input ref={inputRef} type="file" accept="image/*" onChange={handleChange} className="hidden" />
 
-            {preview ? <img src={preview} alt="업로드한 사진 미리보기" /> : <p>반려동물 사진을 업로드하세요</p>}
+            {preview ? (
+                <img src={preview} alt="업로드한 사진 미리보기" className="max-h-[360px] w-auto rounded-lg shadow" />
+            ) : (
+                <p className="text-gray-500">반려동물 사진을 업로드하세요 </p>
+            )}
         </div>
     );
 }
