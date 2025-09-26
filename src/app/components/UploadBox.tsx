@@ -1,11 +1,18 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { resizeImage } from '@/lib/resize';
 
 export default function UploadBox() {
     const [preview, setPreview] = useState<string | null>(null);
     const inputRef = useRef<HTMLInputElement | null>(null);
+
+    useEffect(
+        () => () => {
+            if (preview) URL.revokeObjectURL(preview);
+        },
+        [preview]
+    );
 
     const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
