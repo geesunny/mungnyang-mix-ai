@@ -1,20 +1,30 @@
 'use client';
 
 import { useState, useRef } from 'react';
+import { resizeImage } from '@/lib/resize';
 
 export default function UploadBox() {
     const [preview, setPreview] = useState<string | null>(null);
     const inputRef = useRef<HTMLInputElement | null>(null);
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (!file) return;
         if (!file.type.startsWith('image/')) {
             alert('이미지 파일만 업로드할 수 있어요!');
             return;
         }
-        const url = URL.createObjectURL(file);
-        setPreview(url);
+        try {
+            const blob = await resizeImage(file, 1024, 'image/jpeg', 0.9);
+            const url = URL.createObjectURL(blob);
+            setPreview(old => {
+                if (old) URL.revokeObjectURL(old);
+                return url;
+            });
+        } catch (err) {
+            console.error(err);
+            alert('이미지 리사이즈에 실패했어요 ㅠㅠ');
+        }
     };
 
     const handleClick = () => inputRef.current?.click();
