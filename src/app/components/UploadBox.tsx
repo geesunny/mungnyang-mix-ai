@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { resizeImage } from '@/lib/resize';
+import { classifyImage } from '@/lib/mobilenet';
 
 export default function UploadBox() {
     const [preview, setPreview] = useState<string | null>(null);
@@ -36,6 +37,18 @@ export default function UploadBox() {
 
     const handleClick = () => inputRef.current?.click();
 
+    const imgRef = useRef<HTMLImageElement | null>(null);
+
+    const handleImageLoad = async () => {
+        if (!imgRef.current) return;
+        try {
+            const preds = await classifyImage(imgRef.current, 5);
+            console.log('[MobileNet Top-5]', preds);
+        } catch (e) {
+            console.error('추론 실패:', e);
+        }
+    };
+
     return (
         <div className="flex w-full max-w-md flex-col items-center gap-4 rounded-xl border-2 border-dashed border-gray-300 bg-white p-6 shadow">
             <button
@@ -48,7 +61,13 @@ export default function UploadBox() {
             <input ref={inputRef} type="file" accept="image/*" onChange={handleChange} className="hidden" />
 
             {preview ? (
-                <img src={preview} alt="업로드한 사진 미리보기" className="max-h-[360px] w-auto rounded-lg shadow" />
+                <img
+                    ref={imgRef}
+                    src={preview}
+                    alt="업로드한 사진 미리보기"
+                    onLoad={handleImageLoad}
+                    className="max-h-[360px] w-auto rounded-lg shadow"
+                />
             ) : (
                 <p className="text-gray-500">반려동물 사진을 업로드하세요 </p>
             )}
