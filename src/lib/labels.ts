@@ -1,67 +1,135 @@
 export type RawPred = { className: string; probability: number };
 
-/* 1) 원본 → 대표키 매핑  */
-const NORMALIZE_MAP: Record<string, string> = {
-    // cats
-    'egyptian cat': 'egyptian_cat',
-    'tabby, tabby cat': 'domestic_cat',
-    'tiger cat': 'domestic_cat',
-    'persian cat': 'persian_cat',
-    'siamese cat': 'siamese_cat',
-    // dogs
-    'maltese dog': 'maltese',
-    'shih-tzu': 'shih_tzu',
-    pug: 'pug',
-    chihuahua: 'chihuahua',
-    pomeranian: 'pomeranian',
-    'yorkshire terrier': 'yorkshire_terrier',
-    'golden retriever': 'golden_retriever',
-    'labrador retriever': 'labrador',
-    'german shepherd': 'german_shepherd',
-    'siberian husky': 'siberian_husky',
-    bulldog: 'bulldog',
-    beagle: 'beagle',
-    poodle: 'poodle',
-    dachshund: 'dachshund',
-};
-
-export function normalizeLabel(label: string) {
-    const key = label.toLowerCase();
-    return NORMALIZE_MAP[key] ?? key;
-}
-
-/* 2)카테고리 세트 */
-const DOG_SET = new Set<string>([
-    'maltese',
-    'shih_tzu',
-    'pug',
-    'chihuahua',
-    'pomeranian',
-    'yorkshire_terrier',
-    'golden_retriever',
-    'labrador',
-    'german_shepherd',
-    'siberian_husky',
-    'bulldog',
+export const DOG_LABELS = [
+    'Chihuahua',
+    'Japanese spaniel',
+    'Maltese dog, Maltese terrier, Maltese',
+    'Pekinese, Pekingese, Peke',
+    'Shih-Tzu',
+    'Blenheim spaniel',
+    'papillon',
+    'toy terrier',
+    'Rhodesian ridgeback',
+    'Afghan hound, Afghan',
+    'basset, basset hound',
     'beagle',
-    'poodle',
-    'dachshund',
-]);
-const CAT_SET = new Set<string>(['domestic_cat', 'egyptian_cat', 'persian_cat', 'siamese_cat']);
+    'bloodhound, sleuthhound',
+    'bluetick',
+    'black-and-tan coonhound',
+    'Walker hound, Walker foxhound',
+    'English foxhound',
+    'redbone',
+    'borzoi, Russian wolfhound',
+    'Irish wolfhound',
+    'Italian greyhound',
+    'whippet',
+    'Ibizan hound, Ibizan Podenco',
+    'Norwegian elkhound, elkhound',
+    'otterhound, otter hound',
+    'Saluki, gazelle hound',
+    'Scottish deerhound, deerhound',
+    'Weimaraner',
+    'Staffordshire bullterrier, Staffordshire bull terrier',
+    'American Staffordshire terrier, Staffordshire terrier, American pit bull terrier, pit bull terrier',
+    'Bedlington terrier',
+    'Border terrier',
+    'Kerry blue terrier',
+    'Irish terrier',
+    'Norfolk terrier',
+    'Norwich terrier',
+    'Yorkshire terrier',
+    'wire-haired fox terrier',
+    'Lakeland terrier',
+    'Sealyham terrier, Sealyham',
+    'Airedale, Airedale terrier',
+    'cairn, cairn terrier',
+    'Australian terrier',
+    'Dandie Dinmont, Dandie Dinmont terrier',
+    'Boston bull, Boston terrier',
+    'miniature schnauzer',
+    'giant schnauzer',
+    'standard schnauzer',
+    'Scotch terrier, Scottish terrier, Scottie',
+    'Tibetan terrier, chrysanthemum dog',
+    'silky terrier, Sydney silky',
+    'soft-coated wheaten terrier',
+    'West Highland white terrier',
+    'Lhasa, Lhasa apso',
+    'flat-coated retriever',
+    'curly-coated retriever',
+    'golden retriever',
+    'Labrador retriever',
+    'Chesapeake Bay retriever',
+    'German short-haired pointer',
+    'vizsla, Hungarian pointer',
+    'English setter',
+    'Irish setter, red setter',
+    'Gordon setter',
+    'Brittany spaniel',
+    'clumber, clumber spaniel',
+    'English springer, English springer spaniel',
+    'Welsh springer spaniel',
+    'cocker spaniel, English cocker spaniel, cocker',
+    'Sussex spaniel',
+    'Irish water spaniel',
+    'kuvasz',
+    'schipperke',
+    'groenendael',
+    'malinois',
+    'briard',
+    'kelpie',
+    'komondor',
+    'Old English sheepdog, bobtail',
+    'Shetland sheepdog, Shetland sheep dog, Shetland',
+    'collie',
+    'Border collie',
+    'Bouvier des Flandres, Bouviers des Flandres',
+    'Rottweiler',
+    'German shepherd, German shepherd dog, German police dog, alsatian',
+    'Doberman, Doberman pinscher',
+    'miniature pinscher',
+    'Greater Swiss Mountain dog',
+    'Bernese mountain dog',
+    'Appenzeller',
+    'EntleBucher',
+    'boxer',
+    'bull mastiff',
+    'Tibetan mastiff',
+    'French bulldog',
+    'Great Dane',
+    'Saint Bernard, St Bernard',
+    'Eskimo dog, husky',
+    'malamute, malemute, Alaskan malamute',
+    'Siberian husky',
+    'dalmatian, coach dog, carriage dog',
+    'affenpinscher, monkey pinscher, monkey dog',
+    'basenji',
+    'pug, pug-dog',
+    'Leonberg',
+    'Newfoundland, Newfoundland dog',
+    'Great Pyrenees',
+    'Samoyed, Samoyede',
+    'Pomeranian',
+    'chow, chow chow',
+    'keeshond',
+    'Brabancon griffon',
+    'Pembroke, Pembroke Welsh corgi',
+    'Cardigan, Cardigan Welsh corgi',
+    'toy poodle',
+    'miniature poodle',
+    'standard poodle',
+    'Mexican hairless',
+];
 
-/* 3)개/고양이/기타 분류 */
-export function coarseClass(label: string): 'dog' | 'cat' | 'other' {
-    const key = normalizeLabel(label);
-    if (DOG_SET.has(key)) return 'dog';
-    if (CAT_SET.has(key)) return 'cat';
-    // fallback: 원본에 dog/cat 포함되면 일반 버킷으로 분류
+export function isDog(label: string) {
     const l = label.toLowerCase();
-    if (l.includes('dog')) return 'dog';
-    if (l.includes('cat')) return 'cat';
-    return 'other';
+    return DOG_LABELS.some(x => x.toLowerCase() === l);
 }
 
-/** 화면용 라벨 */
-export function displayLabel(normKey: string) {
-    return normKey.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+export function displayLabel(label: string) {
+    let first = (label.split(',')[0] ?? label).trim();
+
+    first = first.replace(/\bdog\b\s*$/i, '').trim();
+    first = first.replace(/[-_]/g, ' ').replace(/\s+/g, ' ');
+    return first.replace(/\b\w/g, c => c.toUpperCase());
 }

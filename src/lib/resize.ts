@@ -11,18 +11,18 @@ export async function resizeImage(
         // 파일 읽기 성공
         reader.onload = e => {
             const src = e.target?.result as string | undefined;
-            if (!src) return reject(new Error('멍냥 이미지를 읽을 수 없습니다'));
+            if (!src) return reject(new Error('강아지 이미지를 읽을 수 없습니다'));
             img.src = src;
         };
 
         // 파일 읽기 실패
         reader.onerror = () => {
-            reject(new Error('멍냥 이미지 읽기 실패'));
+            reject(new Error('강아지 이미지 읽기 실패'));
         };
 
         // 이미지 로드 실패
         img.onerror = () => {
-            reject(new Error('멍냥 이미지 로드 실패'));
+            reject(new Error('강아지 이미지 로드 실패'));
         };
 
         // 이미지 로드 성공

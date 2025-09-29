@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { resizeImage } from '@/lib/resize';
 import { classifyImage } from '@/lib/mobilenet';
+import { toMixTop3 } from '@/lib/mix';
 
 export default function UploadBox() {
     const [preview, setPreview] = useState<string | null>(null);
@@ -42,8 +43,9 @@ export default function UploadBox() {
     const handleImageLoad = async () => {
         if (!imgRef.current) return;
         try {
-            const preds = await classifyImage(imgRef.current, 5);
-            console.log('[MobileNet Top-5]', preds);
+            const preds = await classifyImage(imgRef.current, 10);
+            const mix = toMixTop3(preds, 3);
+            console.log('[Mix 결과]', mix);
         } catch (e) {
             console.error('추론 실패:', e);
         }
@@ -69,7 +71,7 @@ export default function UploadBox() {
                     className="max-h-[360px] w-auto rounded-lg shadow"
                 />
             ) : (
-                <p className="text-gray-500">반려동물 사진을 업로드하세요 </p>
+                <p className="text-gray-500">강아지 사진을 업로드하세요 </p>
             )}
         </div>
     );
