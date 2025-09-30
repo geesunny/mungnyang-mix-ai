@@ -1,10 +1,13 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { resizeImage } from '@/lib/resize';
 import { classifyImage } from '@/lib/mobilenet';
+import { toMixTop3 } from '@/lib/mix';
 
 export default function UploadBox() {
+    const router = useRouter();
     const [preview, setPreview] = useState<string | null>(null);
     const inputRef = useRef<HTMLInputElement | null>(null);
 
@@ -15,7 +18,7 @@ export default function UploadBox() {
         [preview]
     );
 
-    const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const onFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (!file) return;
         if (!file.type.startsWith('image/')) {
@@ -30,8 +33,7 @@ export default function UploadBox() {
                 return url;
             });
         } catch (err) {
-            console.error(err);
-            alert('이미지 리사이즈에 실패했어요 ㅠㅠ');
+            alert('이미지 리사이즈 실패');
         }
     };
 
@@ -40,12 +42,20 @@ export default function UploadBox() {
     const imgRef = useRef<HTMLImageElement | null>(null);
 
     const handleImageLoad = async () => {
-        if (!imgRef.current) return;
+        if (!imgRef.current || !preview) return;
         try {
-            const preds = await classifyImage(imgRef.current, 5);
-            console.log('[MobileNet Top-5]', preds);
+            const preds = await classifyImage(imgRef.current, 10);
+            const mix = toMixTop3(preds, 3);
+
+            const q = new URLSearchParams({
+                img: preview,
+                mix: JSON.stringify(mix),
+            });
+            router.push(`/result?${q.toString()}`);
+            console.log('[Mix 결과]', mix);
         } catch (e) {
             console.error('추론 실패:', e);
+            alert('why fail why,,,');
         }
     };
 
@@ -58,7 +68,7 @@ export default function UploadBox() {
                 사진 선택하기
             </button>
 
-            <input ref={inputRef} type="file" accept="image/*" onChange={handleChange} className="hidden" />
+            <input ref={inputRef} type="file" accept="image/*" onChange={onFileChange} className="hidden" />
 
             {preview ? (
                 <img
@@ -69,7 +79,7 @@ export default function UploadBox() {
                     className="max-h-[360px] w-auto rounded-lg shadow"
                 />
             ) : (
-                <p className="text-gray-500">반려동물 사진을 업로드하세요 </p>
+                <p className="text-gray-500">강아지 사진을 업로드하세요 </p>
             )}
         </div>
     );
