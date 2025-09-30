@@ -9,7 +9,7 @@ export default function ResultPage() {
     const mixData = params.get('mix');
 
     if (!imgUrl || !mixData) {
-        return <p>결과 데이터가 없습니다. 다시 업로드해주세요 🐾</p>;
+        return <p className="p-6">결과 데이터가 없습니다. 다시 업로드해주세요 🐾</p>;
     }
 
     const parsedMix = JSON.parse(mixData);
