@@ -1,22 +1,32 @@
 'use client';
 
-import { useSearchParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
 import ResultCard from '../components/ResultCard';
 
+type MixItem = {
+    label: string;
+    percent: number;
+};
+
 export default function ResultPage() {
-    const params = useSearchParams();
-    const imgUrl = params.get('img');
-    const mixData = params.get('mix');
+    const [imgUrl, setImgUrl] = useState<string | null>(null);
+    const [mixData, setMixData] = useState<MixItem[]>([]);
 
-    if (!imgUrl || !mixData) {
-        return <p className="p-6">결과 데이터가 없습니다. 다시 업로드해주세요 🐾</p>;
+    useEffect(() => {
+        const i = sessionStorage.getItem('dogmix:image');
+        const m = sessionStorage.getItem('dogmix:mix');
+
+        if (i) setImgUrl(i);
+        if (m) setMixData(JSON.parse(m));
+    }, []);
+
+    if (!imgUrl || mixData.length === 0) {
+        return <p className="p-6"> home에서 다시 시도하기🐾</p>;
     }
-
-    const parsedMix = JSON.parse(mixData);
 
     return (
         <main className="flex flex-col items-center p-6">
-            <ResultCard imgUrl={imgUrl} mix={parsedMix} />
+            <ResultCard imgUrl={imgUrl} mix={mixData} />
         </main>
     );
 }

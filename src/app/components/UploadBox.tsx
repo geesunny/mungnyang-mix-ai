@@ -11,12 +11,7 @@ export default function UploadBox() {
     const [preview, setPreview] = useState<string | null>(null);
     const inputRef = useRef<HTMLInputElement | null>(null);
 
-    useEffect(
-        () => () => {
-            if (preview) URL.revokeObjectURL(preview);
-        },
-        [preview]
-    );
+    useEffect(() => () => setPreview(null), []);
 
     const onFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
@@ -27,11 +22,8 @@ export default function UploadBox() {
         }
         try {
             const blob = await resizeImage(file, 1024, 'image/jpeg', 0.9);
-            const url = URL.createObjectURL(blob);
-            setPreview(old => {
-                if (old) URL.revokeObjectURL(old);
-                return url;
-            });
+            const base64 = await blobToDataURL(blob);
+            setPreview(base64);
         } catch (err) {
             alert('이미지 리사이즈 실패');
         }
@@ -47,11 +39,10 @@ export default function UploadBox() {
             const preds = await classifyImage(imgRef.current, 10);
             const mix = toMixTop3(preds, 3);
 
-            const q = new URLSearchParams({
-                img: preview,
-                mix: JSON.stringify(mix),
-            });
-            router.push(`/result?${q.toString()}`);
+            sessionStorage.setItem('dogmix:image', preview);
+            sessionStorage.setItem('dogmix:mix', JSON.stringify(mix));
+
+            router.push(`/result`);
             console.log('[Mix 결과]', mix);
         } catch (e) {
             console.error('추론 실패:', e);
@@ -83,4 +74,15 @@ export default function UploadBox() {
             )}
         </div>
     );
+}
+
+function blobToDataURL(blob: Blob): Promise<string> {
+    return new Promise((res, rej) => {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+            res(reader.result as string);
+        };
+        reader.onerror = rej;
+        reader.readAsDataURL(blob);
+    });
 }
