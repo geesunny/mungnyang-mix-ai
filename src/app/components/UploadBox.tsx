@@ -55,7 +55,7 @@ export default function UploadBox() {
             <button
                 type="button"
                 onClick={handleClick}
-                className="w-full rounded-lg bg-gray-100 py-3 text-sm font-medium text-gray-700 hover:bg-gray-200">
+                className="w-full rounded-lg cursor-pointer bg-gray-100 py-3 text-sm font-medium text-gray-700 whitespace-nowrap hover:bg-gray-300">
                 사진 선택하기
             </button>
 

@@ -39,7 +39,9 @@ export default function ResultCard({ imgUrl, mix }: ResultCardProps) {
 
     return (
         <div className="flex flex-col items-center w-full max-w-md">
-            <div ref={cardRef} className="w-full max-w-md rounded-xl border p-4 shadow bg-white">
+            <div
+                ref={cardRef}
+                className="w-full max-w-md rounded-xl border-2 border-dashed border-gray-300 bg-white p-6 shadow bg-white">
                 {/* 업로드사진 */}
                 <img
                     src={imgUrl}
@@ -60,12 +62,14 @@ export default function ResultCard({ imgUrl, mix }: ResultCardProps) {
             </div>
             <div className="mt-4 flex gap-2 items-center justify-center">
                 <button
-                    onClick={handleDownload}
-                    className="rounded bg-violet-600 px-4 py-2 text-white whitespace-nowrap">
-                    download
-                </button>
-                <button onClick={goHome} className="rounded bg-violet-600 px-4 py-2 text-white">
+                    onClick={goHome}
+                    className="rounded bg-gray-400 px-4 py-2 text-white hover:bg-gray-500 hover:scale-105 cursor-pointer">
                     Home
+                </button>
+                <button
+                    onClick={handleDownload}
+                    className="rounded bg-gray-600 px-4 py-2 text-white whitespace-nowrap hover:scale-105 hover:bg-gray-900 cursor-pointer">
+                    결과 다운로드
                 </button>
             </div>
         </div>
