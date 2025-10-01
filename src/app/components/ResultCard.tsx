@@ -41,7 +41,11 @@ export default function ResultCard({ imgUrl, mix }: ResultCardProps) {
         <div className="flex flex-col items-center w-full max-w-md">
             <div ref={cardRef} className="w-full max-w-md rounded-xl border p-4 shadow bg-white">
                 {/* 업로드사진 */}
-                <img src={imgUrl} alt="업로드한 반려견" className="w-full rounded-lg object-cover aspect-[4/3]" />
+                <img
+                    src={imgUrl}
+                    alt="업로드한 반려견"
+                    className="w-auto mx-auto rounded-lg object-cover max-h-[360px]"
+                />
 
                 {/* 결과 */}
                 <div className="mt-4 space-y-2">

@@ -51,7 +51,7 @@ export default function UploadBox() {
     };
 
     return (
-        <div className="flex w-full max-w-md flex-col items-center gap-4 rounded-xl border-2 border-dashed border-gray-300 bg-white p-6 shadow">
+        <div className="flex w-full h-[450px]  max-w-md flex-col items-center gap-4 rounded-xl border-2 border-dashed border-gray-300 bg-white p-6 shadow">
             <button
                 type="button"
                 onClick={handleClick}
