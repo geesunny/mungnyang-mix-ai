@@ -25,7 +25,7 @@ export default function ResultPage() {
     }
 
     return (
-        <main className="flex flex-col items-center p-6 min-h-screen justify-center bg-gray-50 ">
+        <main className="flex flex-col items-center p-6 min-h-screen justify-center">
             <ResultCard imgUrl={imgUrl} mix={mixData} />
         </main>
     );

@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 
 import './globals.css';
+import BackgroundPaws from './components/BackgroundPaws';
 
 export const metadata: Metadata = {
     title: '멍냥',
@@ -14,7 +15,10 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="ko">
-            <body>{children}</body>
+            <body>
+                {' '}
+                <BackgroundPaws>{children}</BackgroundPaws>
+            </body>
         </html>
     );
 }
