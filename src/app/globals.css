@@ -31,4 +31,28 @@ body {
         background-repeat: repeat;
         background-position: center;
     }
+
+    /* 버튼 그라데이션 */
+    .btn-grad-pink {
+        background-image: linear-gradient(90deg, #ff8ba7 0%, #ffb3c1 100%);
+        box-shadow: 0 8px 16px rgba(255, 139, 167, 0.35);
+    }
+    .btn-grad-blue {
+        background-image: linear-gradient(90deg, #7bdff2 0%, #70c8e8 100%);
+        box-shadow: 0 8px 16px rgba(123, 223, 242, 0.35);
+    }
+
+    /* 프로그레스바 색 도넛 */
+    .bar-bg {
+        background-color: #e5e7eb;
+    }
+    .accent-1 {
+        background-color: #ff8ba7;
+    }
+    .accent-2 {
+        background-color: #ffd166;
+    }
+    .accent-3 {
+        background-color: #7bdff2;
+    }
 }
