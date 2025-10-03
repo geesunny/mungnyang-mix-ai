@@ -1,26 +1,58 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+    --background: #ffffff;
+    --foreground: #171717;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+    --color-background: var(--background);
+    --color-foreground: var(--foreground);
+    --font-sans: var(--font-geist-sans);
+    --font-mono: var(--font-geist-mono);
+    --paws-pink-light: #fff0f5;
+    --paws-white: #fff7fa;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+    background: var(--background);
+    color: var(--foreground);
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+@layer utilities {
+    .bg-paws-gradient {
+        background: radial-gradient(ellipse at top, var(--paws-pink-light) 0%, var(--paws-white) 60%, #ffffff 100%);
+    }
+
+    .bg-paws-pattern {
+        background-image: url('/paw-pattern.svg');
+        background-size: 220px 220px;
+        background-repeat: repeat;
+        background-position: center;
+    }
+
+    /* 버튼 그라데이션 */
+    .btn-grad-pink {
+        background-image: linear-gradient(90deg, #ff8ba7 0%, #ffb3c1 100%);
+        box-shadow: 0 8px 16px rgba(255, 139, 167, 0.35);
+    }
+    .btn-grad-blue {
+        background-image: linear-gradient(90deg, #7bdff2 0%, #70c8e8 100%);
+        box-shadow: 0 8px 16px rgba(123, 223, 242, 0.35);
+    }
+
+    /* 프로그레스바 색 도넛 */
+    .bar-bg {
+        background-color: #e5e7eb;
+    }
+    .accent-1 {
+        background-color: #ff8ba7;
+    }
+    .accent-2 {
+        background-color: #ffd166;
+    }
+    .accent-3 {
+        background-color: #7bdff2;
+    }
 }
