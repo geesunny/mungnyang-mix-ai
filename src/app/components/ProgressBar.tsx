@@ -24,7 +24,10 @@ export default function ProgressBar({ label, percent, color = 'accent-1' }: Prop
                 aria-valuemax={100}
                 aria-valuenow={safe}
                 aria-label={label}>
-                <div className={`h-full ${color}`} style={{ width: `${safe}%`, transition: 'width .25s ease' }} />
+                <div
+                    className={`h-full ${color} transition-[width] duration-200 ease-out`}
+                    style={{ width: `${safe}%` }}
+                />
             </div>
         </div>
     );
