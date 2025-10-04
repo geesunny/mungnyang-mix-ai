@@ -2,16 +2,15 @@
 
 import { useRouter } from 'next/navigation';
 import { toPng } from 'html-to-image';
-import { useMemo, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import ProgressBar from './ProgressBar';
+import DonutChart from './DonutChart';
 
 type MixItem = { label: string; percent: number };
 interface ResultCardProps {
     imgUrl: string;
     mix: MixItem[];
 }
-
-const ACCENTS = ['#FF8BA7', '#FFD166', '#7BDFF2'] as const;
 
 export default function ResultCard({ imgUrl, mix }: ResultCardProps) {
     const router = useRouter();
@@ -58,20 +57,6 @@ export default function ResultCard({ imgUrl, mix }: ResultCardProps) {
         }
     };
 
-    // 도넛 계산
-    const donut = useMemo(() => {
-        const total = mix.slice(0, 3).reduce((s, m) => s + m.percent, 0) || 1;
-        const r = 56,
-            C = 2 * Math.PI * r;
-        let acc = 0;
-        return mix.slice(0, 3).map((m, i) => {
-            const len = C * (m.percent / total);
-            const seg = { dasharray: `${len} ${C - len}`, offset: -acc, color: ACCENTS[i % 3] };
-            acc += len;
-            return { ...seg, label: m.label, percent: Math.round(m.percent) };
-        });
-    }, [mix]);
-
     return (
         <div className="bg-white rounded-2xl border-soft shadow-soft w-full max-w-md p-4">
             {/* 캡처 영역 */}
@@ -91,32 +76,7 @@ export default function ResultCard({ imgUrl, mix }: ResultCardProps) {
 
                 {/* 도넛 + Top1 */}
                 <div className="mb-4 flex items-center gap-4">
-                    <svg width="140" height="140" viewBox="0 0 140 140">
-                        <g transform="translate(70,70)">
-                            <circle r="56" fill="none" stroke="#E5E7EB" strokeWidth="12" />
-                            {donut.map((d, idx) => (
-                                <circle
-                                    key={idx}
-                                    r="56"
-                                    fill="none"
-                                    stroke={d.color}
-                                    strokeWidth="12"
-                                    strokeDasharray={d.dasharray}
-                                    strokeDashoffset={d.offset}
-                                    transform="rotate(-90)"
-                                    strokeLinecap="round"
-                                />
-                            ))}
-                        </g>
-                    </svg>
-
-                    {mix[0] && (
-                        <div>
-                            <div className="text-[14px] font-semibold text-gray-500">Top Match</div>
-                            <div className="mt-1 text-[20px] font-extrabold text-gray-900">{mix[0].label}</div>
-                            <div className="text-[16px] font-bold text-[#FF8BA7]">{Math.round(mix[0].percent)}%</div>
-                        </div>
-                    )}
+                    <DonutChart data={mix} />
                 </div>
 
                 {/* 리스트 */}
